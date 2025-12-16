@@ -162,6 +162,12 @@ func findFactors(maxValue uint64) (uint64, uint64) {
 	var bestOther uint64
 	var exceeds uint64
 
+	// If value is 8 the following loop condition is true from the start.
+	// So we have to cover this special case.
+	if value == 8 {
+		return sqrt, value / sqrt
+	}
+
 	for current := sqrt; (current*2) > (value/current) && current > 1; current-- {
 		if value%current == 0 {
 			return current, value / current
