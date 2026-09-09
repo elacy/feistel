@@ -653,3 +653,31 @@ func BenchmarkAllSetting(b *testing.B) {
 		})
 	}
 }
+
+func TestCoverage(t *testing.T) {
+	for i := range 1024 {
+		t.Run(fmt.Sprintf("check %d is covered", i), func(t *testing.T) {
+			n, err := NewNetwork(uint64(i), 42, 5)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			results := make(map[uint64]uint8, i)
+
+			for j := range i + 1 {
+				point, err := n.Map(uint64(j))
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				results[point]++
+			}
+
+			for j := range i + 1 {
+				if results[uint64(j)] != 1 {
+					t.Fatalf("Number %d covered for field %d %d times", j, i, results[uint64(j)])
+				}
+			}
+		})
+	}
+}
